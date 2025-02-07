@@ -4,29 +4,32 @@ import MovieBannerLinearDesign from "./MovieBannerLinearDesign";
 
 export default function TopPicForYou() {
   const [relatedMovie, setRelatedMovie] = useState(null);
-  let MovieName = localStorage.getItem("Movie");
-  useEffect(() => {
-    let cachedData = localStorage.getItem("RelatedMovies");
+  const [MovieName, setMovieName] = useState(null); // Store movie name in state
 
-    if (cachedData) {
-      // ✅ Use cached data if it exists
-      setRelatedMovie(JSON.parse(cachedData));
-    } else if (MovieName) {
-      // ✅ Fetch only if no cached data
-      async function FetchRelatedMovie() {
-        try {
-          const res = await fetch(`https://streamingbackend-1.onrender.com/SimilarMovie/${MovieName}`);
-          const data = await res.json();
-          setRelatedMovie(data);
-          localStorage.setItem("RelatedMovies", JSON.stringify(data)); // ✅ Save data to localStorage
-        } catch (err) {
-          setRelatedMovie(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedMovie = localStorage.getItem("Movie");
+      setMovieName(storedMovie); // Set movie name from localStorage
+
+      let cachedData = localStorage.getItem("RelatedMovies");
+
+      if (cachedData) {
+        setRelatedMovie(JSON.parse(cachedData));
+      } else if (storedMovie) {
+        async function FetchRelatedMovie() {
+          try {
+            const res = await fetch(`https://streamingbackend-1.onrender.com/SimilarMovie/${storedMovie}`);
+            const data = await res.json();
+            setRelatedMovie(data);
+            localStorage.setItem("RelatedMovies", JSON.stringify(data));
+          } catch (err) {
+            setRelatedMovie(false);
+          }
         }
+        FetchRelatedMovie();
       }
-      FetchRelatedMovie();
     }
   }, []);
-
 
   return (
     <div className="w-full p-2 flex flex-col items-center">
@@ -37,7 +40,7 @@ export default function TopPicForYou() {
       </div>
 
       <div className="w-full grid grid-cols-5 ResponsiveMovies">
-        {!relatedMovie && MovieName!=null &&
+        {!relatedMovie && MovieName &&
           [...Array(10)].map((_, index) => <MovieBannerLinearDesign key={index} data={{ name: "movie" }} />)}
       </div>
     </div>
