@@ -4,9 +4,8 @@ import MovieBannerLinearDesign from "./MovieBannerLinearDesign";
 
 export default function TopPicForYou() {
   const [relatedMovie, setRelatedMovie] = useState(null);
-
+  let MovieName = localStorage.getItem("Movie");
   useEffect(() => {
-    let MovieName = localStorage.getItem("Movie");
     let cachedData = localStorage.getItem("RelatedMovies");
 
     if (cachedData) {
@@ -38,7 +37,7 @@ export default function TopPicForYou() {
       </div>
 
       <div className="w-full grid grid-cols-5 ResponsiveMovies">
-        {!relatedMovie &&
+        {!relatedMovie && MovieName!=null &&
           [...Array(10)].map((_, index) => <MovieBannerLinearDesign key={index} data={{ name: "movie" }} />)}
       </div>
     </div>
