@@ -14,7 +14,7 @@ export default function MovieBannerLinearDesign({ data }) {
       className="  h-[450px] w-[300px] m-4 MovieLogoResp"
       onClick={() => {router.push(`/movie/details?data=${encodedData}`);localStorage.setItem("Movie",data.name);window.location.assign(`/movie/details?data=${encodedData}`)}}
     >
-      <img src={data?.poster} className="w-full h-[80%] " />
+      <img src={data?.poster} className={`w-full h-[80%] ${data.name=='movie'?"SkeltonAnim":''}`} />
 
       <p>{data?.name}</p>
       <p className="font-light text-xs">{data?.language}</p>
